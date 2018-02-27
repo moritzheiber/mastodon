@@ -7,7 +7,6 @@ gem 'pkg-config', '~> 1.2'
 
 gem 'puma', '~> 3.10'
 gem 'rails', '~> 5.1.4'
-gem 'uglifier', '~> 3.2'
 
 gem 'hamlit-rails', '~> 0.2'
 gem 'pg', '~> 0.20'
@@ -40,6 +39,7 @@ gem 'omniauth', '~> 1.2'
 
 gem 'doorkeeper', '~> 4.2'
 gem 'fast_blank', '~> 1.0'
+gem 'fastimage'
 gem 'goldfinger', '~> 2.1'
 gem 'hiredis', '~> 0.6'
 gem 'redis-namespace', '~> 1.5'
@@ -95,6 +95,10 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.7'
 end
 
+group :production, :test do
+  gem 'private_address_check', '~> 0.4.1'
+end
+
 group :test do
   gem 'capybara', '~> 2.15'
   gem 'climate_control', '~> 0.2'
@@ -115,6 +119,7 @@ group :development do
   gem 'bullet', '~> 5.5'
   gem 'letter_opener', '~> 1.4'
   gem 'letter_opener_web', '~> 1.3'
+  gem 'memory_profiler'
   gem 'rubocop', require: false
   gem 'brakeman', '~> 4.0', require: false
   gem 'bundler-audit', '~> 0.6', require: false

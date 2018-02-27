@@ -44,7 +44,7 @@ class User < ApplicationRecord
   ACTIVE_DURATION = 14.days
 
   devise :two_factor_authenticatable,
-         otp_secret_encryption_key: ENV['OTP_SECRET']
+         otp_secret_encryption_key: ENV.fetch('OTP_SECRET')
 
   devise :two_factor_backupable,
          otp_number_of_backup_codes: 10
@@ -60,6 +60,7 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :account
 
   has_many :applications, class_name: 'Doorkeeper::Application', as: :owner
+  has_many :backups, inverse_of: :user
 
   validates :locale, inclusion: I18n.available_locales.map(&:to_s), if: :locale?
   validates_with BlacklistedEmailValidator, if: :email_changed?

@@ -1,4 +1,7 @@
 language: ruby
+sudo: required
+services:
+  - docker
 cache:
   bundler: true
   yarn: true

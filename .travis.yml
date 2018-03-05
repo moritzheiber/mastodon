@@ -3,57 +3,56 @@ cache:
   bundler: true
   yarn: true
   directories:
-    - node_modules
-    - public/assets
-    - public/packs-test
-    - tmp/cache/babel-loader
+  - node_modules
+  - public/assets
+  - public/packs-test
+  - tmp/cache/babel-loader
 dist: trusty
 sudo: false
 branches:
   only:
-    - master
-
+  - master
 notifications:
   email: false
-
 env:
   global:
-    - LOCAL_DOMAIN=cb6e6126.ngrok.io
-    - LOCAL_HTTPS=true
-    - RAILS_ENV=test
-    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-    - PARALLEL_TEST_PROCESSORS=2
-
+  - LOCAL_DOMAIN=cb6e6126.ngrok.io
+  - LOCAL_HTTPS=true
+  - RAILS_ENV=test
+  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+  - PARALLEL_TEST_PROCESSORS=2
+  - DOCKER_HUB_USERNAME=hello@heiber.im
+  - secure: bulmCCXdCk8MeOqTFmQSfW9XOqaZ62rSu0slhgWUKO4eOZYHmo1AGVi+vvspzX7EkqrJ14QC41Eq3Ov5kLsSJ/7vSkBRweczcoKfvdwWi8GCdQNK0Tk5POBqlS/1TvnqJCNTdx+u6M7NSI1/vjHEoE+5N9ztkM2ndTf+1i23824a5s8JufnxElckutObElheItdGOekLbX9WetJ9xKHp+TgYWQZngy2IzGx82KIZlh5PMPXJHgH0QHDluXfCCaa49IsGeQrzBYh4qlnAwnobLiFoxUVtlBQIlC9DGt4DdJTQvDmmU/antwVNatbpY5sqpoPbM0axfx+rk8pzfTE5xIM2eaS7LkPmesS/CAWZG5WHNvSnQxn8JvN18i5M4+fXibxs+JdEUBFtUSgQlvOVQLj0bMDxlxUoyR/YLgetR4rpSPp/lXfVxEBNDIag85tpFyIg0tRoOK/RbA7qpmoFiFj5QycpXs3KfiodVRUIxJzCftmRrfJoiXGnIW4qTZ7nooK8D/inC/7bllP4LpwE5RvC+IJdsKZCQ63fibjcynmJM9lGeQGj6CjsHTCZdR6L2z77CVabLL/eQZ/5Rnax8ohfTN7K6GWCwqErOtrf+AE3AH2InhKhR75gWnxowswTr4B1MLQk9xaNh7ZCqS4epNrVz8orCtfXxRpoxdB+4SE=
 addons:
   postgresql: 9.4
   apt:
     sources:
-      - trusty-media
-      - sourceline: deb https://dl.yarnpkg.com/debian/ stable main
-        key_url: https://dl.yarnpkg.com/debian/pubkey.gpg
+    - trusty-media
+    - sourceline: deb https://dl.yarnpkg.com/debian/ stable main
+      key_url: https://dl.yarnpkg.com/debian/pubkey.gpg
     packages:
-      - ffmpeg
-      - libicu-dev
-      - libprotobuf-dev
-      - protobuf-compiler
-      - yarn
-
+    - ffmpeg
+    - libicu-dev
+    - libprotobuf-dev
+    - protobuf-compiler
+    - yarn
 rvm:
-  - 2.4.2
-  - 2.5.0
-
+- 2.4.2
+- 2.5.0
 services:
-  - redis-server
-
+- redis-server
 install:
-  - nvm install
-  - bundle install --path=vendor/bundle --without development production --retry=3 --jobs=16
-  - yarn install
-
+- nvm install
+- bundle install --path=vendor/bundle --without development production --retry=3 --jobs=16
+- yarn install
 before_script:
-  - ./bin/rails parallel:create parallel:load_schema parallel:prepare assets:precompile
-
+- "./bin/rails parallel:create parallel:load_schema parallel:prepare assets:precompile"
 script:
-  - travis_retry bundle exec parallel_test spec/ --group-by filesize --type rspec
-  - yarn test
-  - bundle exec i18n-tasks check-normalized && bundle exec i18n-tasks unused
+- travis_retry bundle exec parallel_test spec/ --group-by filesize --type rspec
+- yarn test
+- bundle exec i18n-tasks check-normalized && bundle exec i18n-tasks unused
+deploy:
+  provider: script
+  script: bash deploy_hub.sh
+  on:
+    tags: true

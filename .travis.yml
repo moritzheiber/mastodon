@@ -39,6 +39,7 @@ addons:
     - libprotobuf-dev
     - protobuf-compiler
     - yarn
+    - docker-ce
 rvm:
 - 2.4.2
 - 2.5.0
